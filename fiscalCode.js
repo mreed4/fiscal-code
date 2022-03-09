@@ -10,14 +10,17 @@ const generateFiscalCode = (person) => {
     genderPart,
     dobPart;
 
+  // Generates arrays of consonants or vowels, based on what is passed into it
   const consonants = (str) => str.match(/[^aeiou]/gi),
     vowels = (str) => str.match(/[aeiou]/gi);
 
+  // Variables for the number of consonants and vowels in name and surname
   let consonantsInName = consonants(name).length,
     vowelsInName = vowels(name).length,
     consonantsInSurname = consonants(surname).length,
     vowelsInSurname = vowels(surname).length;
 
+  // This should be self documenting, though Prettier screws up the ternary
   const generateSurnamePart = (consonantsInSurname) => {
     let part =
       surname.length < 3
@@ -26,15 +29,15 @@ const generateFiscalCode = (person) => {
         ? consonants(surname).slice(0, 3)
         : consonantsInSurname < 3
         ? consonants(surname).slice(0, 2).concat(vowels(surname).slice(0, 1))
-        : "XXX";
+        : "ERROR"; // This should never be returned
 
     return part;
   };
 
+  // Start tying it all together
   surnamePart = generateSurnamePart(consonantsInSurname);
 
   let parts = [surnamePart];
-
   let fiscalCode = parts.map((part) => part.join("").toUpperCase()).join("");
 
   return fiscalCode;
