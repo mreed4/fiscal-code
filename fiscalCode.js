@@ -1,14 +1,13 @@
-const months = { 1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "H", 7: "L", 8: "M", 9: "P", 10: "R", 11: "S", 12: "T" };
-
 const generateFiscalCode = (person) => {
+  const months = { 1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "H", 7: "L", 8: "M", 9: "P", 10: "R", 11: "S", 12: "T" };
+
   let name = person.name,
     surname = person.surname,
     gender = person.gender,
-    dob = person.dob,
+    dob = person.dob.split("/").map((n) => +n),
     namePart,
     surnamePart,
-    genderPart,
-    dobPart;
+    genderAndDobPart;
 
   // Generates arrays of consonants or vowels, based on what is passed into it
   const consonants = (str) => str.match(/[^aeiou]/gi),
@@ -20,24 +19,50 @@ const generateFiscalCode = (person) => {
     consonantsInSurname = consonants(surname).length,
     vowelsInSurname = vowels(surname).length;
 
-  // This should be self documenting, though Prettier screws up the ternary formatting
   const generateSurnamePart = (consonantsInSurname) => {
+    let arr = consonants(surname);
     let part =
       surname.length < 3
         ? [...surname].concat(["x"])
         : consonantsInSurname >= 3
-        ? consonants(surname).slice(0, 3)
+        ? arr.slice(0, 3)
         : consonantsInSurname < 3
-        ? consonants(surname).slice(0, 2).concat(vowels(surname).slice(0, 1))
+        ? arr.slice(0, 2).concat(vowels(surname).slice(0, 1))
         : "ERROR"; // This should never be returned
 
     return part;
   };
 
+  const generateNamePart = (consonantsInName) => {
+    let arr = consonants(name);
+    let part =
+      name.length < 3
+        ? [...name].concat(["x"])
+        : consonantsInName > 3
+        ? [arr[0] + arr[2] + arr[3]]
+        : consonantsInName === 3
+        ? arr
+        : consonantsInName < 3
+        ? arr.slice(0, 2).concat(vowels(name).slice(0, 1))
+        : "ERROR"; // This should never be returned
+
+    return part;
+  };
+
+  const generateGenderAndDobPart = (gender, dob) => {
+    let [day, month, year] = dob;
+    year = String(year).slice(2);
+    month = months[month];
+    day = gender === "F" ? day + 40 : gender === "M" && day < 10 ? 0 + String(day) : day;
+    return [year, month, day];
+  };
+
   // Tie it all together
   surnamePart = generateSurnamePart(consonantsInSurname);
+  namePart = generateNamePart(consonantsInName);
+  genderAndDobPart = generateGenderAndDobPart(gender, dob);
 
-  let parts = [surnamePart];
+  let parts = [surnamePart, namePart, genderAndDobPart];
   let fiscalCode = parts
     .map((part) => part.join(""))
     .join("")
@@ -45,21 +70,3 @@ const generateFiscalCode = (person) => {
 
   return fiscalCode;
 };
-
-let test = {
-  name: "Matt",
-  surname: "Edabit",
-  gender: "M",
-  dob: "1/1/1900",
-};
-
-/*
-test = {
-  name: "Helen",
-  surname: "Fox",
-  gender: "F",
-  dob: "1/12/1950",
-};
-*/
-
-console.log(generateFiscalCode(test));
