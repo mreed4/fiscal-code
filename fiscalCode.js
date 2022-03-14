@@ -14,8 +14,8 @@ const fiscalCode = (person) => {
     vowels = (str) => str.match(/[aeiou]/gi);
 
   // The number of consonants and vowels in name and surname
-  let consonantsInName = consonants(name).length;
-  consonantsInSurname = consonants(surname).length;
+  let consonantsInName = consonants(name).length,
+    consonantsInSurname = consonants(surname).length;
 
   const generateSurnamePart = (consonantsInSurname) => {
     let arr = consonants(surname);
