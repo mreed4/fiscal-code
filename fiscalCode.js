@@ -1,23 +1,19 @@
 const fiscalCode = (person) => {
   const months = { 1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "H", 7: "L", 8: "M", 9: "P", 10: "R", 11: "S", 12: "T" };
 
-  let name = person.name,
-    surname = person.surname,
-    gender = person.gender,
-    dob = person.dob.split("/").map((n) => +n),
-    namePart,
-    surnamePart,
-    genderAndDobPart;
+  const { name, surname, gender, dob } = person;
+  dob = person.dob.split("/").map((n) => +n);
+  let namePart, surnamePart, genderAndDobPart;
 
   // Generates arrays of consonants or vowels, based on what is passed into it
-  const consonants = (str) => str.match(/[^aeiou]/gi),
-    vowels = (str) => str.match(/[aeiou]/gi);
+  const consonants = (str) => str.match(/[^aeiou]/gi);
+  const vowels = (str) => str.match(/[aeiou]/gi);
 
   // The number of consonants and vowels in name and surname
-  let consonantsInName = consonants(name).length,
-    consonantsInSurname = consonants(surname).length;
+  const consonantsInName = consonants(name).length;
+  const consonantsInSurname = consonants(surname).length;
 
-  const generateSurnamePart = (consonantsInSurname) => {
+  function generateSurnamePart(consonantsInSurname) {
     let arr = consonants(surname);
     let part =
       surname.length < 3
@@ -29,7 +25,7 @@ const fiscalCode = (person) => {
         : "ERROR"; // This should never be returned
 
     return part;
-  };
+  }
 
   const generateNamePart = (consonantsInName) => {
     let arr = consonants(name);
@@ -48,8 +44,8 @@ const fiscalCode = (person) => {
   };
 
   const generateGenderAndDobPart = (gender, dob) => {
-    let part,
-      [day, month, year] = dob;
+    let part;
+    const [day, month, year] = dob;
 
     year = String(year).slice(2);
     month = months[month];
