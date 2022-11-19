@@ -1,5 +1,5 @@
 const fiscalCode = (person) => {
-  let { name: firstName, surname, gender, dob } = person;
+  let { name: firstName, surname: lastName, gender, dob } = person;
   const months = { 1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "H", 7: "L", 8: "M", 9: "P", 10: "R", 11: "S", 12: "T" };
   dob = person.dob.split("/").map((n) => +n);
 
@@ -13,30 +13,34 @@ const fiscalCode = (person) => {
   }
 
   function generateSurnamePart(num) {
-    let arr = getLetters(surname);
-    let part =
-      surname.length < 3
-        ? [...surname].concat(["x"])
+    let part;
+    let letters = getLetters(lastName);
+
+    part =
+      lastName.length < 3
+        ? [...lastName].concat(["x"])
         : num >= 3
-        ? arr.slice(0, 3)
+        ? letters.slice(0, 3)
         : num < 3
-        ? arr.slice(0, 2).concat(getLetters(surname, "vowels").slice(0, 1))
+        ? letters.slice(0, 2).concat(getLetters(lastName, "vowels").slice(0, 1))
         : "ERROR"; // This should never be returned
 
     return part;
   }
 
   function generateNamePart(num) {
-    let arr = getLetters(firstName);
-    let part =
+    let part;
+    let letters = getLetters(firstName);
+
+    part =
       firstName.length < 3
         ? [...firstName].reverse().concat(["x"])
         : num > 3
         ? [arr[0] + arr[2] + arr[3]]
         : num === 3
-        ? arr
+        ? letters
         : num < 3
-        ? arr.slice(0, 2).concat(getLetters(firstName, "vowels").slice(0, 1))
+        ? letters.slice(0, 2).concat(getLetters(firstName, "vowels").slice(0, 1))
         : "ERROR"; // This should never be returned
 
     return part;
@@ -56,12 +60,12 @@ const fiscalCode = (person) => {
   }
 
   let consonantsInFirstName = getLetters(firstName).length;
-  let consonantsInSurname = getLetters(surname).length;
-  let surnamePart = generateSurnamePart(consonantsInSurname);
+  let consonantsInSurname = getLetters(lastName).length;
+  let lastNamePart = generateSurnamePart(consonantsInSurname);
   let firstNamePart = generateNamePart(consonantsInFirstName);
   let genderAndDobPart = generateGenderAndDobPart(gender, dob);
 
-  let parts = [surnamePart, firstNamePart, genderAndDobPart];
+  let parts = [lastNamePart, firstNamePart, genderAndDobPart];
   let final = parts
     .map((part) => part.join(""))
     .join("")
