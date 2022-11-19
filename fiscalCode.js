@@ -4,10 +4,12 @@ const fiscalCode = (person) => {
   dob = person.dob.split("/").map((n) => +n);
 
   function getLetters(string, letterType = "consonants") {
-		let vowels = string.match(/[aeiou]/gi);
-		let consonants = string.match(/[^aeiou]/gi);
-    if (letterType !== "consonants") { return vowels }
-		return consonants;
+    let vowels = string.match(/[aeiou]/gi);
+    let consonants = string.match(/[^aeiou]/gi);
+    if (letterType !== "consonants") {
+      return vowels;
+    }
+    return consonants;
   }
 
   function generateSurnamePart(num) {
@@ -16,10 +18,10 @@ const fiscalCode = (person) => {
       surname.length < 3
         ? [...surname].concat(["x"])
         : num >= 3
-          ? arr.slice(0, 3)
-          : num < 3
-            ? arr.slice(0, 2).concat(getLetters(surname, "vowels").slice(0, 1))
-            : "ERROR"; // This should never be returned
+        ? arr.slice(0, 3)
+        : num < 3
+        ? arr.slice(0, 2).concat(getLetters(surname, "vowels").slice(0, 1))
+        : "ERROR"; // This should never be returned
 
     return part;
   }
@@ -30,12 +32,12 @@ const fiscalCode = (person) => {
       firstName.length < 3
         ? [...firstName].reverse().concat(["x"])
         : num > 3
-          ? [arr[0] + arr[2] + arr[3]]
-          : num === 3
-            ? arr
-            : num < 3
-              ? arr.slice(0, 2).concat(getLetters(firstName, "vowels").slice(0, 1))
-              : "ERROR"; // This should never be returned
+        ? [arr[0] + arr[2] + arr[3]]
+        : num === 3
+        ? arr
+        : num < 3
+        ? arr.slice(0, 2).concat(getLetters(firstName, "vowels").slice(0, 1))
+        : "ERROR"; // This should never be returned
 
     return part;
   }
