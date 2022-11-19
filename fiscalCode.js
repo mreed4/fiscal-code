@@ -14,15 +14,15 @@ const fiscalCode = (person) => {
 
   function generateSurnamePart(num) {
     let part;
-    let letters = getLetters(lastName);
+    let lettersArr = getLetters(lastName);
 
     part =
       lastName.length < 3
         ? [...lastName].concat(["x"])
         : num >= 3
-        ? letters.slice(0, 3)
+        ? lettersArr.slice(0, 3)
         : num < 3
-        ? letters.slice(0, 2).concat(getLetters(lastName, "vowels").slice(0, 1))
+        ? lettersArr.slice(0, 2).concat(getLetters(lastName, "vowels").slice(0, 1))
         : "ERROR"; // This should never be returned
 
     return part;
@@ -30,17 +30,17 @@ const fiscalCode = (person) => {
 
   function generateNamePart(num) {
     let part;
-    let letters = getLetters(firstName);
+    let lettersArr = getLetters(firstName);
 
     part =
       firstName.length < 3
         ? [...firstName].reverse().concat(["x"])
         : num > 3
-        ? [arr[0] + arr[2] + arr[3]]
+        ? [lettersArr[0] + lettersArr[2] + lettersArr[3]]
         : num === 3
-        ? letters
+        ? lettersArr
         : num < 3
-        ? letters.slice(0, 2).concat(getLetters(firstName, "vowels").slice(0, 1))
+        ? lettersArr.slice(0, 2).concat(getLetters(firstName, "vowels").slice(0, 1))
         : "ERROR"; // This should never be returned
 
     return part;
