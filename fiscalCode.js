@@ -1,7 +1,11 @@
 const fiscalCode = (person) => {
+  // Inital setup
+
   let { name: firstName, surname: lastName, gender, dob } = person;
   const months = { 1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "H", 7: "L", 8: "M", 9: "P", 10: "R", 11: "S", 12: "T" };
   dob = person.dob.split("/").map((n) => +n);
+
+  // Build parts
 
   function getLetters(string, letterType = "consonants") {
     let vowels = string.match(/[aeiou]/gi);
@@ -56,12 +60,21 @@ const fiscalCode = (person) => {
 
     year = String(year).slice(2);
     month = months[month];
-    day = letter === "F" ? day + 40 : letter === "M" && day < 10 ? 0 + String(day) : day;
+
+    if (letter === "F") {
+      day += 40;
+    } else if (letter === "M" && day < 10) {
+      day = 0 + String(day);
+    } else {
+      day = day;
+    }
 
     part = [year, month, day];
 
     return part;
   }
+
+  // Build the final result
 
   let consonantsInFirstName = getLetters(firstName).length;
   let consonantsInLastName = getLetters(lastName).length;
