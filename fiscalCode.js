@@ -1,49 +1,54 @@
 const fiscalCode = (person) => {
   const months = { 1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "H", 7: "L", 8: "M", 9: "P", 10: "R", 11: "S", 12: "T" };
 
-  const { name, surname, gender, dob } = person;
+  let { firstName, surname, gender, dob } = person;
   dob = person.dob.split("/").map((n) => +n);
   let namePart, surnamePart, genderAndDobPart;
 
   // Generates arrays of consonants or vowels, based on what is passed into it
-  const consonants = (str) => str.match(/[^aeiou]/gi);
-  const vowels = (str) => str.match(/[aeiou]/gi);
+  function getLetters(string, type = "consonants") {
+    if (type === "consonants") {
+      return string.match(/[^aeiou]/gi);
+    } else {
+      return string.match(/[aeiou]/gi);
+    }
+  }
 
   // The number of consonants and vowels in name and surname
-  const consonantsInName = consonants(name).length;
-  const consonantsInSurname = consonants(surname).length;
+  let consonantsInFirstNsame = getLetters(firstName).length;
+  let consonantsInSurname = getLetters(surname).length;
 
-  function generateSurnamePart(consonantsInSurname) {
-    let arr = consonants(surname);
+  function generateSurnamePart(num) {
+    let arr = getLetters(surname, "consonants");
     let part =
       surname.length < 3
         ? [...surname].concat(["x"])
-        : consonantsInSurname >= 3
+        : num >= 3
         ? arr.slice(0, 3)
-        : consonantsInSurname < 3
-        ? arr.slice(0, 2).concat(vowels(surname).slice(0, 1))
+        : num < 3
+        ? arr.slice(0, 2).concat(getLetters(surname, "vowels").slice(0, 1))
         : "ERROR"; // This should never be returned
 
     return part;
   }
 
-  const generateNamePart = (consonantsInName) => {
-    let arr = consonants(name);
+  function generateNamePart(num) {
+    let arr = getletters(firstName, "consonants");
     let part =
-      name.length < 3
-        ? [...name].reverse().concat(["x"])
-        : consonantsInName > 3
+      firstName.length < 3
+        ? [...firstName].reverse().concat(["x"])
+        : num > 3
         ? [arr[0] + arr[2] + arr[3]]
-        : consonantsInName === 3
+        : num === 3
         ? arr
-        : consonantsInName < 3
-        ? arr.slice(0, 2).concat(vowels(name).slice(0, 1))
+        : num < 3
+        ? arr.slice(0, 2).concat(getLetters(firstName, "vowels").slice(0, 1))
         : "ERROR"; // This should never be returned
 
     return part;
   };
 
-  const generateGenderAndDobPart = (gender, dob) => {
+  function generateGenderAndDobPart(gender, dob) {
     let part;
     const [day, month, year] = dob;
 
