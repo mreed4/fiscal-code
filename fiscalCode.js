@@ -6,9 +6,11 @@ const fiscalCode = (person) => {
   function getLetters(string, letterType = "consonants") {
     let vowels = string.match(/[aeiou]/gi);
     let consonants = string.match(/[^aeiou]/gi);
+
     if (letterType !== "consonants") {
       return vowels;
     }
+
     return consonants;
   }
 
@@ -62,9 +64,9 @@ const fiscalCode = (person) => {
   }
 
   let consonantsInFirstName = getLetters(firstName).length;
-  let consonantsInSurname = getLetters(lastName).length;
+  let consonantsInLastName = getLetters(lastName).length;
 
-  let lastNamePart = getLastNamePart(consonantsInSurname);
+  let lastNamePart = getLastNamePart(consonantsInLastName);
   let firstNamePart = getFirstnamePart(consonantsInFirstName);
   let genderAndDobPart = getGenderAndDobPart(gender, dob);
 
