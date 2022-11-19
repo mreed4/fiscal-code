@@ -12,41 +12,43 @@ const fiscalCode = (person) => {
     return consonants;
   }
 
-  function generateSurnamePart(num) {
+  function getLastNamePart(num) {
     let part;
     let lettersArr = getLetters(lastName);
 
-    part =
-      lastName.length < 3
-        ? [...lastName].concat(["x"])
-        : num >= 3
-        ? lettersArr.slice(0, 3)
-        : num < 3
-        ? lettersArr.slice(0, 2).concat(getLetters(lastName, "vowels").slice(0, 1))
-        : "ERROR"; // This should never be returned
+    if (lastName.length < 3) {
+      part = [...lastName].concat(["x"]);
+    } else if (num >= 3) {
+      part = lettersArr.slice(0, 3);
+    } else if (num < 3) {
+      part = lettersArr.slice(0, 2).concat(getLetters(lastName, "vowels").slice(0, 1));
+    } else {
+      part = null;
+    }
 
     return part;
   }
 
-  function generateNamePart(num) {
+  function getFirstnamePart(num) {
     let part;
     let lettersArr = getLetters(firstName);
 
-    part =
-      firstName.length < 3
-        ? [...firstName].reverse().concat(["x"])
-        : num > 3
-        ? [lettersArr[0] + lettersArr[2] + lettersArr[3]]
-        : num === 3
-        ? lettersArr
-        : num < 3
-        ? lettersArr.slice(0, 2).concat(getLetters(firstName, "vowels").slice(0, 1))
-        : "ERROR"; // This should never be returned
+    if (firstName.length < 3) {
+      part = [...firstName].reverse().concat(["x"]);
+    } else if (num > 3) {
+      part = [lettersArr[0] + lettersArr[2] + lettersArr[3]];
+    } else if (num === 3) {
+      part = lettersArr;
+    } else if (num < 3) {
+      part = lettersArr.slice(0, 2).concat(getLetters(firstName, "vowels").slice(0, 1));
+    } else {
+      part = null;
+    }
 
     return part;
   }
 
-  function generateGenderAndDobPart(letter, date) {
+  function getGenderAndDobPart(letter, date) {
     let part;
     let [day, month, year] = date;
 
@@ -61,9 +63,10 @@ const fiscalCode = (person) => {
 
   let consonantsInFirstName = getLetters(firstName).length;
   let consonantsInSurname = getLetters(lastName).length;
-  let lastNamePart = generateSurnamePart(consonantsInSurname);
-  let firstNamePart = generateNamePart(consonantsInFirstName);
-  let genderAndDobPart = generateGenderAndDobPart(gender, dob);
+
+  let lastNamePart = getLastNamePart(consonantsInSurname);
+  let firstNamePart = getFirstnamePart(consonantsInFirstName);
+  let genderAndDobPart = getGenderAndDobPart(gender, dob);
 
   let parts = [lastNamePart, firstNamePart, genderAndDobPart];
   let final = parts
